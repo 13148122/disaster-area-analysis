@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, jsonify
 from utils import configure_gemini, analyze_images
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
 # Create templates directory if it doesn't exist
 os.makedirs('templates', exist_ok=True)
 
-# Configure Gemini with your API key
-GEMINI_API_KEY = 'AIzaSyCOpwPl8r7SdxaKSzFr_z0stJjqOCKH-YQ'  # Replace with your actual API key
+# Get API key from environment variable
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 configure_gemini(GEMINI_API_KEY)
 
 @app.route('/')
