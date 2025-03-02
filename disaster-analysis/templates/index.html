@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disaster Area Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff5f0;
+            color: #1a1a1a;
+        }
+
+        h1 {
+            color: #c05621;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .upload-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .image-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .image-upload {
+            text-align: center;
+        }
+
+        .image-upload h3 {
+            margin-bottom: 15px;
+            color: #dd6b20;
+        }
+
+        .file-input-container {
+            background: #fffaf0;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #ed8936;
+            margin-bottom: 15px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fffaf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #fbd38d;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        button {
+            background: #dd6b20;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #c05621;
+            transform: translateY(-2px);
+        }
+
+        #loading {
+            text-align: center;
+            padding: 20px;
+            color: #dd6b20;
+            font-weight: 500;
+        }
+
+        #results {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .analysis-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #fffaf0;
+            border-radius: 10px;
+            border-left: 4px solid #dd6b20;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .analysis-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            background: #ffffff;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #dd6b20;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #fbd38d;
+        }
+
+        .section-content {
+            margin-left: 20px;
+        }
+
+        .bullet-point {
+            position: relative;
+            padding-left: 20px;
+            margin: 12px 0;
+            line-height: 1.6;
+            transition: transform 0.2s ease;
+        }
+
+        .bullet-point:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #dd6b20;
+        }
+
+        .bullet-point:hover {
+            transform: translateX(5px);
+            color: #c05621;
+        }
+
+        .analysis-intro {
+            background: #fffaf0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ed8936;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .analysis-intro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            background: #ffffff;
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            padding: 15px;
+            background: #fff5f0;
+            border-left: 4px solid #ed8936;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .disclaimer:hover {
+            background: #fffaf0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .image-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #results h2 {
+            color: #dd6b20;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fbd38d;
+        }
+    </style>
+</head>
+<body>
+    <h1>Disaster Area Analysis</h1>
+    
+    <div class="upload-container">
+        <form id="upload-form">
+            <div class="image-section">
+                <div class="image-upload">
+                    <h3>Before Disaster</h3>
+                    <div class="file-input-container">
+                        <input type="file" id="before-image" name="before_image" accept="image/*" required>
+                    </div>
+                    <div id="before-preview" class="image-preview">
+                        <span>Image preview will appear here</span>
+                    </div>
+                </div>
+                
+                <div class="image-upload">
+                    <h3>After Disaster</h3>
+                    <div class="file-input-container">
+                        <input type="file" id="after-image" name="after_image" accept="image/*" required>
+                    </div>
+                    <div id="after-preview" class="image-preview">
+                        <span>Image preview will appear here</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Analyze Impact</button>
+        </form>
+    </div>
+
+    <div id="loading" class="hidden">
+        Analyzing disaster impact... Please wait...
+    </div>
+
+    <div id="results" class="hidden">
+        <h2>Analysis Results</h2>
+        <div id="results-content"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('upload-form');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const resultsContent = document.getElementById('results-content');
+
+            function previewImage(input, previewId) {
+                const preview = document.getElementById(previewId);
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            document.getElementById('before-image').addEventListener('change', function() {
+                previewImage(this, 'before-preview');
+            });
+            document.getElementById('after-image').addEventListener('change', function() {
+                previewImage(this, 'after-preview');
+            });
+
+            function formatAnalysis(text) {
+                const sections = text.split(/(?=\d\.\s[A-Z])/);
+                return sections.map(section => {
+                    if (section.trim()) {
+                        const lines = section.split('\n');
+                        const title = lines[0].trim();
+                        
+                        const content = lines.slice(1)
+                            .map(line => {
+                                line = line.trim();
+                                if (line.startsWith('-')) {
+                                    line = line.substring(1).trim();
+                                    return `<div class="bullet-point">${line}</div>`;
+                                }
+                                return line ? `<p>${line}</p>` : '';
+                            })
+                            .filter(line => line)
+                            .join('');
+
+                        return `
+                            <div class="analysis-section">
+                                <div class="section-title">${title}</div>
+                                <div class="section-content">
+                                    ${content}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    return '';
+                }).join('');
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                loading.classList.remove('hidden');
+                results.classList.add('hidden');
+
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch('/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        resultsContent.innerHTML = formatAnalysis(data.analysis);
+                    } else {
+                        resultsContent.innerHTML = `
+                            <div class="error-message">
+                                ${data.error}
+                            </div>
+                        `;
+                    }
+                    results.classList.remove('hidden');
+                } catch (error) {
+                    resultsContent.innerHTML = `
+                        <div class="error-message">
+                            An error occurred: ${error.message}
+                        </div>
+                    `;
+                    results.classList.remove('hidden');
+                } finally {
+                    loading.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

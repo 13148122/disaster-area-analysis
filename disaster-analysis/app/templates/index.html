@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Disaster Area Analysis</h1>
+    
+    <div class="upload-section">
+        <form id="upload-form">
+            <div class="image-upload">
+                <h3>Before Image</h3>
+                <input type="file" id="before-image" name="before_image" accept="image/*" required>
+                <div id="before-preview" class="image-preview"></div>
+            </div>
+
+            <div class="image-upload">
+                <h3>After Image</h3>
+                <input type="file" id="after-image" name="after_image" accept="image/*" required>
+                <div id="after-preview" class="image-preview"></div>
+            </div>
+
+            <button type="submit" id="analyze-btn">Analyze Images</button>
+        </form>
+    </div>
+
+    <div id="loading" class="hidden">
+        Analyzing images... Please wait...
+    </div>
+
+    <div id="results" class="hidden">
+        <h2>Analysis Results</h2>
+        <div id="results-content"></div>
+    </div>
+</div>
+{% endblock %} 
